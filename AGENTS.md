@@ -92,7 +92,22 @@
 ---
 
 ## 6. โครงสร้างและแบบแผนเอกสาร (Documentation Structure)
-- `AGENTS.md` (ไฟล์นี้): กฎ กติกา มาตรฐาน และแนวทางการพัฒนาสำหรับ Agent และนักพัฒนา
-- `docs/requirements.md`: เอกสาร Requirement และขอบเขตฟังก์ชันทั้งหมดของระบบ (ได้จากการ Grill-me)
-- `docs/architecture.md`: สถาปัตยกรรมระบบ, Data Flow, Database Schema, และ API Specifications
-- `docs/testing-chrome-mcp.md`: เช็คลิสต์และคู่มือการเทสด้วย Chrome DevTools MCP
+- [AGENTS.md](file:///home/boriphat/Projects/students/AGENTS.md): กฎ กติกา มาตรฐาน และแนวทางการพัฒนาสำหรับ Agent และนักพัฒนา
+- [docs/requirements.md](file:///home/boriphat/Projects/students/docs/requirements.md): เอกสาร Requirement และขอบเขตฟังก์ชันทั้งหมดของระบบ (ได้จากการ Grill-me)
+- [docs/architecture.md](file:///home/boriphat/Projects/students/docs/architecture.md): สถาปัตยกรรมระบบ, Data Flow, Database Schema, และ API Specifications
+- [docs/testing-chrome-mcp.md](file:///home/boriphat/Projects/students/docs/testing-chrome-mcp.md): เช็คลิสต์และคู่มือการเทสด้วย Chrome DevTools MCP
+- [docs/tools-and-setup.md](file:///home/boriphat/Projects/students/docs/tools-and-setup.md): ข้อมูลสภาพแวดล้อมและเครื่องมือที่ติดตั้งในระบบ
+
+---
+
+## 7. ข้อมูลสรุปของโปรเจกต์นี้ (Confirmed Project Specs)
+- **ชื่อระบบ:** ระบบบริหารจัดการสถานศึกษาและข้อมูลนักเรียนแบบครบวงจร (School & Student Management System - SMS)
+- **เป้าหมาย:** Web Application แบบ Full-Stack ทำงานได้จริง ครบทุกโมดูล (Admin, Teacher, Student)
+- **Tech Stack:**
+  - Next.js (App Router) + TypeScript
+  - Tailwind CSS + Lucide React + Radix UI
+  - SQLite (`better-sqlite3`) + Drizzle ORM
+  - Auth: Session Cookie + bcrypt password hashing
+  - Seed Data: ข้อมูลจำลองโรงเรียนไทย (Admin, ครู 5 ท่าน, นักเรียน 25 คน, 6 วิชา, ตารางสอน, คะแนนสอบ)
+- **คุณภาพ:** Full-Responsive ผ่านการทดสอบด้วย Chrome DevTools MCP (Zero Console Errors, Responsive ทุกวิวพอร์ต)
+
