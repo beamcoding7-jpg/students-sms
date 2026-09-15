@@ -93,6 +93,7 @@
 
 ## 6. โครงสร้างและแบบแผนเอกสาร (Documentation Structure)
 - [AGENTS.md](file:///home/boriphat/Projects/students/AGENTS.md): กฎ กติกา มาตรฐาน และแนวทางการพัฒนาสำหรับ Agent และนักพัฒนา
+- [docs/roadmap.md](file:///home/boriphat/Projects/students/docs/roadmap.md): แผนการพัฒนา 7 Phases แบบละเอียด พร้อมเกณฑ์ทดสอบด้วย Chrome MCP และจุดรออนุมัติ
 - [docs/requirements.md](file:///home/boriphat/Projects/students/docs/requirements.md): เอกสาร Requirement และขอบเขตฟังก์ชันทั้งหมดของระบบ (ได้จากการ Grill-me)
 - [docs/architecture.md](file:///home/boriphat/Projects/students/docs/architecture.md): สถาปัตยกรรมระบบ, Data Flow, Database Schema, และ API Specifications
 - [docs/testing-chrome-mcp.md](file:///home/boriphat/Projects/students/docs/testing-chrome-mcp.md): เช็คลิสต์และคู่มือการเทสด้วย Chrome DevTools MCP
@@ -109,5 +110,9 @@
   - SQLite (`better-sqlite3`) + Drizzle ORM
   - Auth: Session Cookie + bcrypt password hashing
   - Seed Data: ข้อมูลจำลองโรงเรียนไทย (Admin, ครู 5 ท่าน, นักเรียน 25 คน, 6 วิชา, ตารางสอน, คะแนนสอบ)
-- **คุณภาพ:** Full-Responsive ผ่านการทดสอบด้วย Chrome DevTools MCP (Zero Console Errors, Responsive ทุกวิวพอร์ต)
+- **กระบวนการพัฒนา (Development Workflow):**
+  - แบ่งเป็น **7 Modular Phases** ตาม [docs/roadmap.md](file:///home/boriphat/Projects/students/docs/roadmap.md)
+  - ทำทีละโมดูลจนเสร็จ ทดสอบผ่าน Chrome DevTools MCP (Mobile/Tablet/Desktop, Zero Console Errors)
+  - **หยุดรอผู้ใช้ตรวจสอบและอนุมัติ (Gate Approval)** ในทุก Phase ก่อนเริ่ม Phase ถัดไป
+
 
