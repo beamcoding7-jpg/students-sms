@@ -36,3 +36,6 @@ next-env.d.ts
 # sqlite wal files (keep sqlite.db in git so user has immediate seed data upon checkout)
 *.db-wal
 *.db-shm
+
+# local screenshots
+/screenshots/
