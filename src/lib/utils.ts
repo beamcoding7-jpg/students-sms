@@ -35,3 +35,39 @@ export function getAttendanceStatus(status: "present" | "late" | "absent" | "lea
       return { label: "ขาดเรียน", color: "bg-rose-500 text-white" };
   }
 }
+
+/**
+ * จัดรูปแบบวันที่เป็นภาษาไทย พ.ศ. (เช่น "18 ก.ย. 2569" หรือรวมเวลา)
+ */
+export function formatThaiDate(dateInput: string | Date | null | undefined, includeTime = false): string {
+  if (!dateInput) return "-";
+  try {
+    const d = typeof dateInput === "string" ? new Date(dateInput) : dateInput;
+    if (isNaN(d.getTime())) return String(dateInput);
+
+    return d.toLocaleDateString("th-TH", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      ...(includeTime ? { hour: "2-digit", minute: "2-digit" } : {}),
+    });
+  } catch {
+    return String(dateInput);
+  }
+}
+
+/**
+ * จัดรูปแบบเบอร์โทรศัพท์ไทย (เช่น 081-234-5678)
+ */
+export function formatPhoneNumber(phone: string | null | undefined): string {
+  if (!phone) return "-";
+  const cleaned = phone.replace(/\D/g, "");
+  if (cleaned.length === 10) {
+    return `${cleaned.slice(0, 3)}-${cleaned.slice(3, 6)}-${cleaned.slice(6)}`;
+  }
+  if (cleaned.length === 9) {
+    return `${cleaned.slice(0, 2)}-${cleaned.slice(2, 5)}-${cleaned.slice(5)}`;
+  }
+  return phone;
+}
+

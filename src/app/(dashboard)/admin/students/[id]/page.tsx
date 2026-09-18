@@ -7,6 +7,8 @@ import { eq } from "drizzle-orm";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Breadcrumb } from "@/components/shared/Breadcrumb";
+import { calculateGPA } from "@/lib/validations/grade";
 import {
   ArrowLeft,
   User,
@@ -82,20 +84,18 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
       gradeLetter: grades.gradeLetter,
       courseName: courses.courseName,
       courseCode: courses.courseCode,
+      credits: courses.credits,
     })
     .from(grades)
     .innerJoin(courses, eq(grades.courseId, courses.id))
     .where(eq(grades.studentId, student.id))
     .all();
 
-  // คำนวณ GPA
-  let totalGradePoints = 0;
-  studentGrades.forEach((g) => {
-    totalGradePoints += parseFloat(g.gradeLetter) || 0;
-  });
-  const gpa = studentGrades.length > 0
-    ? (totalGradePoints / studentGrades.length).toFixed(2)
-    : "4.00";
+  // คำนวณ GPA ตามสูตรถ่วงน้ำหนักมาตรฐาน (Weighted GPA)
+  const { gpa: weightedGPA } = calculateGPA(
+    studentGrades.map((g) => ({ credits: g.credits, gradeLetter: g.gradeLetter }))
+  );
+  const gpa = studentGrades.length > 0 ? weightedGPA.toFixed(2) : "4.00";
 
   // ดึงสถิติการเข้าเรียน
   const studentAttendance = await db
@@ -115,6 +115,15 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
 
   return (
     <div className="space-y-6">
+      {/* Breadcrumb Navigation */}
+      <Breadcrumb
+        items={[
+          { label: "ข้อมูลนักเรียน", href: "/admin/students" },
+          { label: `${student.studentCode} ${student.fullName}` },
+        ]}
+        homeHref="/admin"
+      />
+
       {/* Top Action Bar */}
       <div className="flex items-center justify-between gap-4">
         <Link

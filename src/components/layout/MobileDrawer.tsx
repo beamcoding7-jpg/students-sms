@@ -6,27 +6,15 @@ import { usePathname } from "next/navigation";
 import { SessionUser } from "@/lib/session";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
-import {
-  School,
-  LayoutDashboard,
-  Users,
-  GraduationCap,
-  BookOpen,
-  CalendarCheck,
-  CalendarDays,
-  Award,
-  Bell,
-  FileText,
-  LogOut,
-  Menu,
-  X,
-} from "lucide-react";
+import { getNavigationItems, getRoleDisplayInfo } from "@/lib/navigation";
+import { School, LogOut, Menu, X, Settings } from "lucide-react";
 
 interface MobileDrawerProps {
   user: SessionUser;
+  onOpenAccount?: () => void;
 }
 
-export function MobileDrawer({ user }: MobileDrawerProps) {
+export function MobileDrawer({ user, onOpenAccount }: MobileDrawerProps) {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
 
@@ -47,52 +35,8 @@ export function MobileDrawer({ user }: MobileDrawerProps) {
     };
   }, [isOpen]);
 
-  const getNavItems = () => {
-    switch (user.role) {
-      case "admin":
-        return [
-          { href: "/admin", label: "ภาพรวมระบบ", icon: LayoutDashboard },
-          { href: "/admin/students", label: "ข้อมูลนักเรียน", icon: Users },
-          { href: "/admin/teachers", label: "ข้อมูลครูและบุคลากร", icon: GraduationCap },
-          { href: "/admin/courses", label: "หลักสูตรรายวิชา", icon: BookOpen },
-          { href: "/admin/attendance", label: "สถิติการเข้าเรียน", icon: CalendarCheck },
-          { href: "/admin/schedules", label: "ตารางเรียน/สอน", icon: CalendarDays },
-          { href: "/admin/grades", label: "ผลการเรียนภาพรวม", icon: Award },
-          { href: "/admin/announcements", label: "ประกาศข่าวสาร", icon: Bell },
-        ];
-      case "teacher":
-        return [
-          { href: "/teacher", label: "แดชบอร์ดคุณครู", icon: LayoutDashboard },
-          { href: "/teacher/attendance", label: "เช็คชื่อประจำวัน", icon: CalendarCheck },
-          { href: "/teacher/grades", label: "บันทึกคะแนนและตัดเกรด", icon: Award },
-          { href: "/teacher/schedule", label: "ตารางสอนประจำสัปดาห์", icon: CalendarDays },
-          { href: "/teacher/assignments", label: "การบ้านและงานที่มอบหมาย", icon: FileText },
-        ];
-      case "student":
-        return [
-          { href: "/student", label: "แดชบอร์ดนักเรียน", icon: LayoutDashboard },
-          { href: "/student/grades", label: "ผลการเรียนและเกรด (GPA)", icon: Award },
-          { href: "/student/attendance", label: "ประวัติการเข้าเรียน", icon: CalendarCheck },
-          { href: "/student/timetable", label: "ตารางเรียนประจำสัปดาห์", icon: CalendarDays },
-          { href: "/student/assignments", label: "การบ้านและส่งงาน", icon: FileText },
-        ];
-    }
-  };
-
-  const navItems = getNavItems();
-
-  const getRoleLabel = () => {
-    switch (user.role) {
-      case "admin":
-        return { text: "ผู้ดูแลระบบ", variant: "destructive" as const };
-      case "teacher":
-        return { text: "คุณครู", variant: "info" as const };
-      case "student":
-        return { text: "นักเรียน", variant: "success" as const };
-    }
-  };
-
-  const roleInfo = getRoleLabel();
+  const navItems = getNavigationItems(user.role);
+  const roleInfo = getRoleDisplayInfo(user.role);
 
   return (
     <>
@@ -100,42 +44,47 @@ export function MobileDrawer({ user }: MobileDrawerProps) {
       <button
         type="button"
         onClick={() => setIsOpen(true)}
-        className="md:hidden inline-flex items-center justify-center w-10 h-10 rounded-lg border border-border bg-card text-foreground hover:bg-muted transition-colors min-h-[44px] min-w-[44px]"
-        aria-label="Open mobile menu"
+        className="md:hidden flex items-center justify-center w-10 h-10 rounded-lg text-foreground hover:bg-muted transition-colors focus:outline-none focus:ring-2 focus:ring-ring"
+        aria-label="เปิดเมนูนำทาง"
       >
-        <Menu className="w-5 h-5 text-foreground" />
+        <Menu className="w-5 h-5" />
       </button>
 
-      {/* Backdrop Overlay */}
+      {/* Backdrop สีทึบหลังเปิด Drawer */}
       {isOpen && (
         <div
-          className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm md:hidden animate-in fade-in"
           onClick={() => setIsOpen(false)}
+          className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs transition-opacity animate-in fade-in duration-200 md:hidden"
         />
       )}
 
-      {/* Slide-out Drawer Panel */}
+      {/* แถบเมนูด้านข้าง (Slide-over drawer) */}
       <div
         className={cn(
-          "fixed inset-y-0 left-0 z-50 w-72 bg-card border-r border-border shadow-2xl flex flex-col transition-transform duration-300 ease-in-out md:hidden",
+          "fixed top-0 bottom-0 left-0 z-50 w-72 max-w-[85vw] bg-card text-card-foreground border-r border-border shadow-2xl flex flex-col transition-transform duration-300 ease-in-out md:hidden",
           isOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
-        {/* Drawer Header */}
-        <div className="flex items-center justify-between px-6 h-16 border-b border-border">
+        {/* ส่วนหัว Drawer */}
+        <div className="flex items-center justify-between px-5 h-16 border-b border-border">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
-              <School className="w-4 h-4 text-primary" />
+            <div className="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
+              <School className="w-5 h-5 text-primary" />
             </div>
-            <span className="font-bold text-sm tracking-tight text-foreground">SMS Portal</span>
+            <div>
+              <span className="font-bold text-sm tracking-tight text-foreground block">
+                SMS School Portal
+              </span>
+              <p className="text-[11px] text-muted-foreground">โรงเรียนสาธิตวิทยาคม</p>
+            </div>
           </div>
           <button
             type="button"
             onClick={() => setIsOpen(false)}
-            className="w-9 h-9 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted"
-            aria-label="Close menu"
+            className="w-8 h-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+            aria-label="ปิดเมนูนำทาง"
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4" />
           </button>
         </div>
 
@@ -146,7 +95,9 @@ export function MobileDrawer({ user }: MobileDrawerProps) {
           </div>
           {navItems.map((item) => {
             const Icon = item.icon;
-            const isActive = pathname === item.href || (item.href !== `/${user.role}` && pathname.startsWith(item.href));
+            const isActive =
+              pathname === item.href ||
+              (item.href !== `/${user.role}` && pathname.startsWith(item.href));
             return (
               <Link
                 key={item.href}
@@ -154,11 +105,16 @@ export function MobileDrawer({ user }: MobileDrawerProps) {
                 className={cn(
                   "flex items-center gap-3 px-3 py-3 rounded-lg text-base font-medium transition-colors min-h-[44px]",
                   isActive
-                    ? "bg-primary text-primary-foreground font-semibold shadow-sm"
+                    ? "bg-primary text-primary-foreground font-semibold shadow-xs"
                     : "text-muted-foreground hover:bg-muted hover:text-foreground"
                 )}
               >
-                <Icon className={cn("w-5 h-5 shrink-0", isActive ? "text-primary-foreground" : "text-muted-foreground")} />
+                <Icon
+                  className={cn(
+                    "w-5 h-5 shrink-0",
+                    isActive ? "text-primary-foreground" : "text-muted-foreground"
+                  )}
+                />
                 <span className="truncate">{item.label}</span>
               </Link>
             );
@@ -167,22 +123,30 @@ export function MobileDrawer({ user }: MobileDrawerProps) {
 
         {/* Drawer Footer */}
         <div className="p-4 border-t border-border bg-muted/30">
-          <div className="flex items-center gap-3 mb-3">
+          <button
+            type="button"
+            onClick={() => {
+              setIsOpen(false);
+              onOpenAccount?.();
+            }}
+            className="w-full flex items-center gap-3 p-2 -mx-2 rounded-xl hover:bg-muted transition-colors text-left group mb-2 cursor-pointer"
+          >
             <div className="w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold shrink-0">
               {user.fullName.charAt(0)}
             </div>
             <div className="overflow-hidden flex-1">
               <p className="text-sm font-semibold text-foreground truncate">{user.fullName}</p>
-              <Badge variant={roleInfo.variant} className="text-[10px] px-1.5 py-0 mt-0.5">
-                {roleInfo.text}
+              <Badge variant={roleInfo.badgeVariant} className="text-[10px] px-1.5 py-0 mt-0.5">
+                {roleInfo.shortText}
               </Badge>
             </div>
-          </div>
+            <Settings className="w-4 h-4 text-muted-foreground" />
+          </button>
 
           <form action="/api/auth/logout" method="POST">
             <button
               type="submit"
-              className="w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium text-destructive hover:bg-destructive/10 transition-colors border border-destructive/20 min-h-[44px]"
+              className="w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium text-destructive hover:bg-destructive/10 transition-colors border border-destructive/20 min-h-[44px] cursor-pointer"
             >
               <LogOut className="w-4 h-4" />
               <span>ออกจากระบบ</span>

@@ -1,8 +1,8 @@
 "use server";
 
 import { db, client } from "@/lib/db";
-import { courses, enrollments, students } from "@/lib/db/schema";
-import { eq, and } from "drizzle-orm";
+import { courses, enrollments, students, schedules, grades, assignments, submissions } from "@/lib/db/schema";
+import { eq, and, inArray } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { courseSchema, CourseFormValues } from "@/lib/validations/course";
 
@@ -151,10 +151,26 @@ export async function deleteCourseAction(courseId: string): Promise<ActionRespon
       return { success: false, error: "ไม่พบรายวิชาที่ต้องการลบ" };
     }
 
-    await client.execute({
-      sql: "DELETE FROM courses WHERE id = ?",
-      args: [courseId],
-    });
+    // 1. ลบการบ้านและการส่งงานของวิชานี้
+    const courseAssignments = await db
+      .select({ id: assignments.id })
+      .from(assignments)
+      .where(eq(assignments.courseId, courseId))
+      .all();
+    const assignmentIds = courseAssignments.map((a) => a.id);
+
+    if (assignmentIds.length > 0) {
+      await db.delete(submissions).where(inArray(submissions.assignmentId, assignmentIds));
+      await db.delete(assignments).where(eq(assignments.courseId, courseId));
+    }
+
+    // 2. ลบตารางเรียน (schedules), ผลการเรียน (grades), การลงทะเบียน (enrollments)
+    await db.delete(schedules).where(eq(schedules.courseId, courseId));
+    await db.delete(grades).where(eq(grades.courseId, courseId));
+    await db.delete(enrollments).where(eq(enrollments.courseId, courseId));
+
+    // 3. ลบรายวิชา
+    await db.delete(courses).where(eq(courses.id, courseId));
 
     revalidatePath("/admin/courses");
     revalidatePath("/admin");

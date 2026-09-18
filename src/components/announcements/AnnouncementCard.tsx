@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useTransition } from "react";
+import React, { useState, useTransition } from "react";
 import {
   Pin,
   Calendar,
@@ -16,7 +16,8 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { cn, formatThaiDate } from "@/lib/utils";
+import { ConfirmDialog } from "@/components/shared/ConfirmDialog";
 import {
   togglePinAnnouncementAction,
   deleteAnnouncementAction,
@@ -82,23 +83,11 @@ export function AnnouncementCard({
   className,
 }: AnnouncementCardProps) {
   const [isPending, startTransition] = useTransition();
+  const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
 
   const config =
     CATEGORY_CONFIG[announcement.category] || CATEGORY_CONFIG.general;
   const CategoryIcon = config.icon;
-
-  const formatDate = (isoString: string) => {
-    try {
-      const d = new Date(isoString);
-      return d.toLocaleDateString("th-TH", {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-      });
-    } catch {
-      return isoString;
-    }
-  };
 
   const getTargetRoleLabel = (role: string) => {
     switch (role) {
@@ -121,11 +110,14 @@ export function AnnouncementCard({
   };
 
   const handleDelete = () => {
-    if (confirm(`คุณต้องการลบประกาศ "${announcement.title}" หรือไม่?`)) {
-      startTransition(async () => {
-        await deleteAnnouncementAction(announcement.id);
-      });
-    }
+    setIsConfirmDeleteOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
+    startTransition(async () => {
+      await deleteAnnouncementAction(announcement.id);
+      setIsConfirmDeleteOpen(false);
+    });
   };
 
   return (
@@ -248,9 +240,22 @@ export function AnnouncementCard({
 
         <div className="flex items-center gap-1.5 font-mono">
           <Calendar className="w-3.5 h-3.5" />
-          <span>{formatDate(announcement.createdAt)}</span>
+          <span>{formatThaiDate(announcement.createdAt)}</span>
         </div>
       </div>
+
+      {/* Confirmation Dialog สำหรับลบประกาศ */}
+      <ConfirmDialog
+        open={isConfirmDeleteOpen}
+        onOpenChange={setIsConfirmDeleteOpen}
+        title="ยืนยันการลบประกาศ"
+        description={`คุณต้องการลบประกาศ "${announcement.title}" ออกจากระบบหรือไม่? ประกาศนี้จะหายไปจากฟีดข่าวสารของทุกคนทันที`}
+        confirmLabel="ลบประกาศ"
+        cancelLabel="ยกเลิก"
+        isDestructive={true}
+        isLoading={isPending}
+        onConfirm={handleConfirmDelete}
+      />
     </div>
   );
 }

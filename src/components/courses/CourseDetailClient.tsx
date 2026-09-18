@@ -7,6 +7,8 @@ import { BulkEnrollDialog } from "./BulkEnrollDialog";
 import { unenrollStudentAction } from "@/app/(dashboard)/admin/courses/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Breadcrumb } from "@/components/shared/Breadcrumb";
+import { ConfirmDialog } from "@/components/shared/ConfirmDialog";
 import {
   ArrowLeft,
   BookOpen,
@@ -63,6 +65,7 @@ export function CourseDetailClient({
   const [isBulkOpen, setIsBulkOpen] = useState(false);
   const [unenrollLoading, setUnenrollLoading] = useState<string | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
+  const [unenrollTarget, setUnenrollTarget] = useState<{ id: string; name: string } | null>(null);
 
   // Filter enrolled students
   const filteredStudents = enrolledStudents.filter((s) => {
@@ -75,19 +78,22 @@ export function CourseDetailClient({
     );
   });
 
-  const handleUnenroll = async (enrollmentId: string, studentName: string) => {
-    if (!confirm(`ต้องการถอนนักเรียน "${studentName}" ออกจากรายวิชานี้ใช่หรือไม่?`)) {
-      return;
-    }
+  const handleUnenroll = (enrollmentId: string, studentName: string) => {
+    setUnenrollTarget({ id: enrollmentId, name: studentName });
+  };
 
-    setUnenrollLoading(enrollmentId);
+  const handleConfirmUnenroll = async () => {
+    if (!unenrollTarget) return;
+
+    setUnenrollLoading(unenrollTarget.id);
     setActionError(null);
 
     try {
-      const res = await unenrollStudentAction(enrollmentId, course.id);
+      const res = await unenrollStudentAction(unenrollTarget.id, course.id);
       if (!res.success) {
         setActionError(res.error || "ไม่สามารถถอนรายวิชาได้");
       } else {
+        setUnenrollTarget(null);
         router.refresh();
       }
     } catch {
@@ -103,14 +109,23 @@ export function CourseDetailClient({
 
   return (
     <div className="space-y-6">
+      {/* Breadcrumb Navigation */}
+      <Breadcrumb
+        items={[
+          { label: "หลักสูตรรายวิชา", href: "/admin/courses" },
+          { label: `${course.courseCode} ${course.courseName}` },
+        ]}
+        homeHref="/admin"
+      />
+
       {/* Back button */}
       <div>
         <Link
           href="/admin/courses"
-          className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors font-medium"
+          className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors font-medium"
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>กลับไปหน้าหลักสูตรและรายวิชา</span>
+          <span>กลับไปหน้ารายการวิชา</span>
         </Link>
       </div>
 
@@ -385,6 +400,19 @@ export function CourseDetailClient({
         courseName={course.courseName}
         defaultGrade={course.gradeLevel}
         onSuccess={() => router.refresh()}
+      />
+
+      {/* Confirmation Dialog สำหรับถอนรายวิชา */}
+      <ConfirmDialog
+        open={Boolean(unenrollTarget)}
+        onOpenChange={(open) => !open && setUnenrollTarget(null)}
+        title="ยืนยันการถอนรายวิชา"
+        description={`ต้องการถอนนักเรียน "${unenrollTarget?.name}" ออกจากรายวิชา ${course.courseCode} ${course.courseName} ใช่หรือไม่?`}
+        confirmLabel="ถอนนักเรียน"
+        cancelLabel="ยกเลิก"
+        isDestructive={true}
+        isLoading={Boolean(unenrollLoading)}
+        onConfirm={handleConfirmUnenroll}
       />
     </div>
   );

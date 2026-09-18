@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { EmptyState } from "@/components/shared/EmptyState";
 
 interface AdminAnnouncementsClientProps {
   initialAnnouncements: AnnouncementItem[];
@@ -175,7 +176,6 @@ export function AdminAnnouncementsClient({
             className="h-9 rounded-md border border-input bg-card px-3 text-xs text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
           >
             <option value="all">ทุกกลุ่มเป้าหมาย</option>
-            <option value="all">ทุกคน</option>
             <option value="teacher">ครูเท่านั้น</option>
             <option value="student">นักเรียนเท่านั้น</option>
           </select>
@@ -185,9 +185,17 @@ export function AdminAnnouncementsClient({
       {/* Announcements List */}
       <div className="space-y-4">
         {sorted.length === 0 ? (
-          <div className="text-center py-12 rounded-2xl border border-dashed border-border bg-card">
-            <p className="text-sm text-muted-foreground">ไม่พบประกาศข่าวสารที่ตรงกับเงื่อนไข</p>
-          </div>
+          <EmptyState
+            icon={Bell}
+            title="ไม่พบประกาศข่าวสาร"
+            description={
+              searchQuery || categoryFilter !== "all" || roleFilter !== "all"
+                ? "ไม่พบข่าวสารที่ตรงกับคำค้นหาหรือตัวกรองที่เลือก"
+                : "ยังไม่มีประกาศข่าวสารในระบบ กดปุ่มด้านล่างเพื่อสร้างประกาศใหม่"
+            }
+            actionLabel={!searchQuery && categoryFilter === "all" && roleFilter === "all" ? "สร้างประกาศใหม่" : undefined}
+            onAction={!searchQuery && categoryFilter === "all" && roleFilter === "all" ? handleCreate : undefined}
+          />
         ) : (
           sorted.map((item) => (
             <AnnouncementCard

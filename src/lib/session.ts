@@ -1,9 +1,11 @@
 import crypto from "crypto";
 
+export type UserRole = "admin" | "teacher" | "student";
+
 export interface SessionUser {
   id: string;
   email: string;
-  role: "admin" | "teacher" | "student";
+  role: UserRole;
   fullName: string;
 }
 

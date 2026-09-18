@@ -22,6 +22,7 @@ import {
   StudentGradeRow,
 } from "@/app/(dashboard)/teacher/grades/actions";
 import { calculateGradeLetter } from "@/lib/validations/grade";
+import { EmptyState } from "@/components/shared/EmptyState";
 
 interface CourseOption {
   id: string;
@@ -185,6 +186,28 @@ export function TeacherGradebookClient({
     }
   };
 
+  // กรณีครูยังไม่มีรายวิชาที่สอนในระบบ
+  if (courses.length === 0) {
+    return (
+      <div className="space-y-6 max-w-7xl mx-auto pb-20">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight text-foreground flex items-center gap-2">
+            <Award className="w-6 h-6 text-primary" />
+            สมุดบันทึกคะแนนและตัดเกรด (Gradebook)
+          </h1>
+          <p className="text-sm text-muted-foreground mt-1">
+            ครูผู้สอน: <span className="font-semibold text-foreground">{teacherName}</span>
+          </p>
+        </div>
+        <EmptyState
+          icon={BookOpen}
+          title="ยังไม่มีรายวิชาที่สอน"
+          description="คุณยังไม่ได้รับมอบหมายรายวิชาสอนในภาคเรียนนี้ กรุณาติดต่อผู้ดูแลระบบหรือฝ่ายวิชาการเพื่อจัดสรรวิชาสอน"
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6 max-w-7xl mx-auto pb-20">
       {/* ส่วนหัวหน้าจอ */}
@@ -238,29 +261,25 @@ export function TeacherGradebookClient({
             <CheckCircle2 className="w-4 h-4 text-emerald-500" />
           </div>
           <p className="text-2xl font-bold text-foreground">{stats.passRate}%</p>
-          <p className="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium">
-            ผ่าน {stats.passCount} จาก {students.length} คน
-          </p>
+          <p className="text-[11px] text-muted-foreground">ผ่าน {stats.passCount} คน</p>
         </div>
 
         <div className="bg-card border border-border rounded-xl p-4 shadow-sm space-y-1">
           <div className="flex items-center justify-between text-muted-foreground text-xs">
-            <span>เกรด 4.0 (ยอดเยี่ยม)</span>
+            <span>ผลการเรียนระดับ 4</span>
             <Sparkles className="w-4 h-4 text-amber-500" />
           </div>
-          <p className="text-2xl font-bold text-foreground">{stats.grade4Count}</p>
-          <p className="text-[11px] text-muted-foreground">
-            คิดเป็น {students.length > 0 ? Math.round((stats.grade4Count / students.length) * 100) : 0}% ของห้อง
-          </p>
+          <p className="text-2xl font-bold text-foreground">{stats.grade4Count} คน</p>
+          <p className="text-[11px] text-muted-foreground">ได้เกรด 4.0</p>
         </div>
 
         <div className="bg-card border border-border rounded-xl p-4 shadow-sm space-y-1">
           <div className="flex items-center justify-between text-muted-foreground text-xs">
-            <span>นักเรียนในรายวิชา</span>
+            <span>จำนวนนักเรียน</span>
             <Users className="w-4 h-4 text-blue-500" />
           </div>
-          <p className="text-2xl font-bold text-foreground">{students.length}</p>
-          <p className="text-[11px] text-muted-foreground">ลงทะเบียนในรายวิชานี้</p>
+          <p className="text-2xl font-bold text-foreground">{students.length} คน</p>
+          <p className="text-[11px] text-muted-foreground">ลงทะเบียนในวิชานี้</p>
         </div>
       </div>
 
@@ -283,22 +302,30 @@ export function TeacherGradebookClient({
         </div>
       )}
 
-      {/* 1. Desktop Table View (≥ 768px) */}
-      <div className="hidden md:block bg-card border border-border rounded-xl overflow-hidden shadow-sm">
-        <table className="w-full text-left text-sm">
-          <thead className="bg-muted/50 border-b border-border text-xs text-muted-foreground">
-            <tr>
-              <th className="py-3 px-4 w-12 text-center">#</th>
-              <th className="py-3 px-4 w-28">รหัสนักเรียน</th>
-              <th className="py-3 px-4">ชื่อ - นามสกุล</th>
-              <th className="py-3 px-4 w-20 text-center">ห้อง</th>
-              <th className="py-3 px-3 w-32 text-center">คะแนนเก็บ (50)</th>
-              <th className="py-3 px-3 w-32 text-center">กลางภาค (20)</th>
-              <th className="py-3 px-3 w-32 text-center">ปลายภาค (30)</th>
-              <th className="py-3 px-4 w-28 text-center font-bold">รวม (100)</th>
-              <th className="py-3 px-4 w-24 text-center font-bold">เกรด</th>
-            </tr>
-          </thead>
+      {students.length === 0 ? (
+        <EmptyState
+          icon={Users}
+          title="ยังไม่มีนักเรียนลงทะเบียนในวิชานี้"
+          description={`รายวิชา ${currentCourse?.courseCode} ${currentCourse?.courseName} ยังไม่มีนักเรียนลงทะเบียนเรียนในระบบ`}
+        />
+      ) : (
+        <>
+          {/* 1. Desktop Table View (≥ 768px) */}
+          <div className="hidden md:block bg-card border border-border rounded-xl overflow-hidden shadow-sm">
+            <table className="w-full text-left text-sm">
+              <thead className="bg-muted/50 border-b border-border text-xs text-muted-foreground">
+                <tr>
+                  <th className="py-3 px-4 w-12 text-center">#</th>
+                  <th className="py-3 px-4 w-28">รหัสนักเรียน</th>
+                  <th className="py-3 px-4">ชื่อ - นามสกุล</th>
+                  <th className="py-3 px-4 w-20 text-center">ห้อง</th>
+                  <th className="py-3 px-3 w-32 text-center">คะแนนเก็บ (50)</th>
+                  <th className="py-3 px-3 w-32 text-center">กลางภาค (20)</th>
+                  <th className="py-3 px-3 w-32 text-center">ปลายภาค (30)</th>
+                  <th className="py-3 px-4 w-28 text-center font-bold">รวม (100)</th>
+                  <th className="py-3 px-4 w-24 text-center font-bold">เกรด</th>
+                </tr>
+              </thead>
           <tbody className="divide-y divide-border">
             {students.map((stu, idx) => (
               <tr key={stu.studentId} className="hover:bg-muted/20 transition-colors">
@@ -464,6 +491,8 @@ export function TeacherGradebookClient({
           </div>
         ))}
       </div>
+        </>
+      )}
 
       {/* Floating / Sticky Save Bar ด้านล่าง */}
       {students.length > 0 && (

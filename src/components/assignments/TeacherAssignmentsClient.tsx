@@ -24,6 +24,8 @@ import {
 import { GradeSubmissionDialog } from "./GradeSubmissionDialog";
 import { deleteAssignmentAction } from "@/app/(dashboard)/teacher/assignments/actions";
 import { cn } from "@/lib/utils";
+import { EmptyState } from "@/components/shared/EmptyState";
+import { ConfirmDialog } from "@/components/shared/ConfirmDialog";
 
 interface TeacherAssignmentsClientProps {
   courses: TeacherCourseOption[];
@@ -43,6 +45,7 @@ export function TeacherAssignmentsClient({
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<TeacherAssignmentItem | null>(null);
   const [gradingItem, setGradingItem] = useState<TeacherAssignmentItem | null>(null);
+  const [deleteConfirmItem, setDeleteConfirmItem] = useState<TeacherAssignmentItem | null>(null);
 
   const [isDeleting, startDelete] = useTransition();
 
@@ -94,12 +97,37 @@ export function TeacherAssignmentsClient({
   };
 
   const handleDelete = (item: TeacherAssignmentItem) => {
-    if (confirm(`คุณต้องการลบการบ้าน "${item.title}" หรือไม่? (ข้อมูลการส่งงานของนักเรียนจะถูกลบไปด้วย)`)) {
-      startDelete(async () => {
-        await deleteAssignmentAction(item.id);
-      });
-    }
+    setDeleteConfirmItem(item);
   };
+
+  const handleConfirmDelete = () => {
+    if (!deleteConfirmItem) return;
+    startDelete(async () => {
+      await deleteAssignmentAction(deleteConfirmItem.id);
+      setDeleteConfirmItem(null);
+    });
+  };
+
+  if (courses.length === 0) {
+    return (
+      <div className="space-y-6 max-w-6xl mx-auto pb-16">
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground flex items-center gap-2.5">
+            <FileText className="w-7 h-7 text-primary" />
+            ระบบมอบหมายการบ้านและตรวจงาน
+          </h1>
+          <p className="text-sm text-muted-foreground mt-1">
+            ครูผู้สอน: <span className="font-semibold text-foreground">{teacherName}</span>
+          </p>
+        </div>
+        <EmptyState
+          icon={BookOpen}
+          title="ยังไม่มีรายวิชาที่สอน"
+          description="คุณยังไม่ได้รับมอบหมายรายวิชาสอนในภาคเรียนนี้ ไม่สามารถสร้างหรือจัดการการบ้านได้ กรุณาติดต่อผู้ดูแลระบบเพื่อมอบหมายวิชาสอน"
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 max-w-6xl mx-auto pb-16">
@@ -215,11 +243,17 @@ export function TeacherAssignmentsClient({
       {/* Assignment Cards List */}
       <div className="space-y-4">
         {filteredAssignments.length === 0 ? (
-          <div className="text-center py-12 rounded-2xl border border-dashed border-border bg-card">
-            <p className="text-sm text-muted-foreground">
-              ยังไม่มีรายการการบ้านที่ตรงกับเงื่อนไข
-            </p>
-          </div>
+          <EmptyState
+            icon={FileText}
+            title="ไม่พบรายการการบ้าน"
+            description={
+              searchQuery || selectedCourseId !== "all"
+                ? "ไม่พบการบ้านที่ตรงกับคำค้นหาหรือรายวิชาที่เลือก"
+                : "ยังไม่มีการมอบหมายการบ้านในระบบ กดปุ่มด้านล่างเพื่อเริ่มสร้างการบ้าน"
+            }
+            actionLabel={!searchQuery && selectedCourseId === "all" ? "มอบหมายการบ้านใหม่" : undefined}
+            onAction={!searchQuery && selectedCourseId === "all" ? handleCreate : undefined}
+          />
         ) : (
           filteredAssignments.map((asg) => {
             const percentSubmitted =
@@ -341,6 +375,19 @@ export function TeacherAssignmentsClient({
         open={Boolean(gradingItem)}
         onOpenChange={(open) => !open && setGradingItem(null)}
         assignment={gradingItem}
+      />
+
+      {/* Confirmation Dialog สำหรับลบการบ้าน */}
+      <ConfirmDialog
+        open={Boolean(deleteConfirmItem)}
+        onOpenChange={(open) => !open && setDeleteConfirmItem(null)}
+        title="ยืนยันการลบการบ้าน"
+        description={`คุณต้องการลบการบ้าน "${deleteConfirmItem?.title}" หรือไม่? ข้อมูลการส่งงานและคะแนนของนักเรียนทั้งหมดในงานนี้จะถูกลบไปด้วย`}
+        confirmLabel="ลบการบ้าน"
+        cancelLabel="ยกเลิก"
+        isDestructive={true}
+        isLoading={isDeleting}
+        onConfirm={handleConfirmDelete}
       />
     </div>
   );
