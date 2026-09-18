@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { getNavigationItems, getRoleDisplayInfo } from "@/lib/navigation";
 import { UserAccountDialog } from "@/components/shared/UserAccountDialog";
 import { School, LogOut, Settings } from "lucide-react";
+import { SCHOOL_CONFIG } from "@/config/school";
 
 interface SidebarProps {
   user: SessionUser;
@@ -33,9 +34,9 @@ export function Sidebar({ user }: SidebarProps) {
           </div>
           <div className="overflow-hidden">
             <span className="font-bold text-sm tracking-tight text-foreground truncate block">
-              SMS School Portal
+              {SCHOOL_CONFIG.systemName}
             </span>
-            <p className="text-xs text-muted-foreground truncate">โรงเรียนสาธิตวิทยาคม</p>
+            <p className="text-xs text-muted-foreground truncate">{SCHOOL_CONFIG.name}</p>
           </div>
         </div>
 

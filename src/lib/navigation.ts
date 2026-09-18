@@ -8,6 +8,7 @@ import {
   Award,
   Bell,
   FileText,
+  Settings,
   LucideIcon,
 } from "lucide-react";
 import { UserRole } from "./session";
@@ -34,6 +35,7 @@ export function getNavigationItems(role: UserRole): NavItem[] {
         { href: "/admin/schedules", label: "ตารางเรียน/สอน", icon: CalendarDays },
         { href: "/admin/grades", label: "ผลการเรียนภาพรวม", icon: Award },
         { href: "/admin/announcements", label: "ประกาศข่าวสาร", icon: Bell },
+        { href: "/admin/settings", label: "ตั้งค่าสถานศึกษา", icon: Settings },
       ];
     case "teacher":
       return [

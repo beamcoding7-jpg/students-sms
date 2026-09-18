@@ -22,10 +22,12 @@ import {
   Award,
   ArrowRight,
   ShieldCheck,
+  Settings,
 } from "lucide-react";
 import Link from "next/link";
 import { AnnouncementFeed } from "@/components/announcements/AnnouncementFeed";
 import { AnnouncementItem } from "@/components/announcements/AnnouncementCard";
+import { SCHOOL_CONFIG } from "@/config/school";
 
 export default async function AdminDashboardPage() {
   const user = await getCurrentUser();
@@ -80,6 +82,7 @@ export default async function AdminDashboardPage() {
     { title: "ตารางเรียน/สอน", desc: "จัดการตารางเรียนและห้องเรียน", href: "/admin/schedules", icon: CalendarDays, color: "text-purple-600 bg-purple-50 dark:bg-purple-950/50" },
     { title: "ผลการเรียนภาพรวม", desc: "ทรานสคริปต์และจัดอันดับเกรด", href: "/admin/grades", icon: Award, color: "text-amber-600 bg-amber-50 dark:bg-amber-950/50" },
     { title: "ประกาศข่าวสาร", desc: "เผยแพร่ข่าวและปักหมุดประกาศ", href: "/admin/announcements", icon: Bell, color: "text-rose-600 bg-rose-50 dark:bg-rose-950/50" },
+    { title: "ตั้งค่าสถานศึกษา", desc: "ข้อมูลโรงเรียน ปีการศึกษา และสำรองข้อมูล", href: "/admin/settings", icon: Settings, color: "text-slate-600 bg-slate-100 dark:bg-slate-800 dark:text-slate-300" },
   ];
 
   return (
@@ -95,12 +98,14 @@ export default async function AdminDashboardPage() {
               ยินดีต้อนรับ, {user?.fullName}
             </h1>
             <p className="text-white/95 text-sm md:text-base mt-1 max-w-2xl">
-              ระบบบริหารจัดการสถานศึกษาและข้อมูลนักเรียนแบบครบวงจร (School & Student Management System)
+              {SCHOOL_CONFIG.name} ({SCHOOL_CONFIG.nameEn}) • ระบบบริหารจัดการสถานศึกษาและข้อมูลนักเรียน
             </p>
           </div>
           <div className="flex items-center gap-2 bg-white/10 backdrop-blur rounded-xl p-3 border border-white/20 shrink-0">
-            <ShieldCheck className="w-5 h-5 text-emerald-300" />
-            <span className="text-xs md:text-sm font-medium">ระบบพร้อมสมบูรณ์ครบ 7 โมดูล</span>
+            <div className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse shrink-0" />
+            <span className="text-xs md:text-sm font-medium">
+              ภาคเรียนที่ {SCHOOL_CONFIG.semester}/{SCHOOL_CONFIG.academicYear} • ออนไลน์ปกติ
+            </span>
           </div>
         </div>
       </div>
@@ -148,7 +153,7 @@ export default async function AdminDashboardPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl sm:text-3xl font-bold">{totalCourses} วิชา</div>
-            <p className="text-[11px] text-muted-foreground mt-1">ภาคเรียนที่ 1/2569</p>
+            <p className="text-[11px] text-muted-foreground mt-1">ภาคเรียนที่ {SCHOOL_CONFIG.semester}/{SCHOOL_CONFIG.academicYear}</p>
           </CardContent>
         </Card>
 

@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { getGradeBadgeClass } from "./TeacherGradebookClient";
+import { SCHOOL_CONFIG } from "@/config/school";
 
 export interface StudentCourseGradeItem {
   id: string;
@@ -299,7 +300,8 @@ export function StudentGradesClient({
           <div className="w-12 h-12 rounded-full border-2 border-black flex items-center justify-center mx-auto mb-1">
             <School className="w-6 h-6 text-black" />
           </div>
-          <h2 className="text-lg font-bold text-black tracking-tight">โรงเรียนสาธิตวิทยาคม</h2>
+          <h2 className="text-lg font-bold text-black tracking-tight">{SCHOOL_CONFIG.name}</h2>
+          <p className="text-xs text-gray-600">{SCHOOL_CONFIG.affiliation}</p>
           <p className="text-sm font-semibold text-gray-800">
             ใบรายงานผลการเรียนประจำภาคเรียน (Academic Transcript)
           </p>

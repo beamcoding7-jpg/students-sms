@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { getNavigationItems, getRoleDisplayInfo } from "@/lib/navigation";
 import { School, LogOut, Menu, X, Settings } from "lucide-react";
+import { SCHOOL_CONFIG } from "@/config/school";
 
 interface MobileDrawerProps {
   user: SessionUser;
@@ -92,9 +93,9 @@ export function MobileDrawer({ user, onOpenAccount }: MobileDrawerProps) {
             </div>
             <div>
               <span className="font-bold text-sm tracking-tight text-foreground block">
-                SMS School Portal
+                {SCHOOL_CONFIG.systemName}
               </span>
-              <p className="text-[11px] text-muted-foreground">โรงเรียนสาธิตวิทยาคม</p>
+              <p className="text-[11px] text-muted-foreground">{SCHOOL_CONFIG.name}</p>
             </div>
           </div>
           <button

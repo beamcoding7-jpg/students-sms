@@ -1,6 +1,7 @@
 import React, { Suspense } from "react";
 import { LoginForm } from "./LoginForm";
 import { ThemeToggle } from "@/components/shared/ThemeToggle";
+import { SCHOOL_CONFIG } from "@/config/school";
 
 export default function LoginPage() {
   return (
@@ -19,7 +20,7 @@ export default function LoginPage() {
 
       {/* Footer copyright */}
       <footer className="text-center text-xs text-muted-foreground py-4">
-        © 2569 โรงเรียนสาธิตวิทยาคม • School & Student Management System (SMS)
+        © {SCHOOL_CONFIG.academicYear} {SCHOOL_CONFIG.name} ({SCHOOL_CONFIG.affiliation}) • {SCHOOL_CONFIG.systemName}
       </footer>
     </div>
   );

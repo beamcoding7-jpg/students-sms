@@ -9,6 +9,8 @@ import { UserAccountDialog } from "@/components/shared/UserAccountDialog";
 import { Badge } from "@/components/ui/badge";
 import { User } from "lucide-react";
 
+import { SCHOOL_CONFIG } from "@/config/school";
+
 interface TopbarProps {
   user: SessionUser;
 }
@@ -32,6 +34,7 @@ export function Topbar({ user }: TopbarProps) {
     if (pathname.includes("/grades")) return "ผลการเรียนและบันทึกคะแนน";
     if (pathname.includes("/assignments")) return "การบ้านและงานที่มอบหมาย";
     if (pathname.includes("/announcements")) return "ประกาศข่าวสารโรงเรียน";
+    if (pathname.includes("/settings")) return "ตั้งค่าระบบสถานศึกษา";
 
     switch (user.role) {
       case "admin":
@@ -64,7 +67,7 @@ export function Topbar({ user }: TopbarProps) {
             variant="outline"
             className="hidden sm:inline-flex text-xs font-normal border-primary/30 text-primary bg-primary/5"
           >
-            ภาคเรียนที่ 1/2569
+            ภาคเรียนที่ {SCHOOL_CONFIG.semester}/{SCHOOL_CONFIG.academicYear}
           </Badge>
 
           <ThemeToggle />
