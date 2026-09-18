@@ -143,16 +143,16 @@ async function seed() {
   // 1. เพิ่มผู้ใช้งาน Super Admin
   await client.execute({
     sql: "INSERT INTO users (id, email, password_hash, role, full_name, avatar_url, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)",
-    args: ["usr_admin_1", "admin@school.ac.th", defaultPasswordHash, "admin", "ดร.วิชัย ศรีสวัสดิ์ (ผู้ดูแลระบบ)", "/avatars/admin.png", now],
+    args: ["usr_admin_1", "admin@wstr.ac.th", defaultPasswordHash, "admin", "ดร.วิชัย ศรีสวัสดิ์ (ผู้ดูแลระบบ)", "/avatars/admin.png", now],
   });
 
   // 2. เพิ่มคุณครู 5 ท่าน
   const teachersData = [
-    { id: "tch_1", userId: "usr_tch_1", email: "somchai.t@school.ac.th", name: "อ.สมชาย ทองดี", dept: "วิทยาศาสตร์และเทคโนโลยี", phone: "081-234-5671", room: "ม.4/1" },
-    { id: "tch_2", userId: "usr_tch_2", email: "wipha.k@school.ac.th", name: "อ.วิภา กลิ่นสุคนธ์", dept: "ภาษาไทย", phone: "081-234-5672", room: "ม.4/2" },
-    { id: "tch_3", userId: "usr_tch_3", email: "theerapol.m@school.ac.th", name: "อ.ธีรพล มีชัย", dept: "คณิตศาสตร์", phone: "081-234-5673", room: "ม.5/1" },
-    { id: "tch_4", userId: "usr_tch_4", email: "orathai.p@school.ac.th", name: "อ.อรทัย พรมหมดี", dept: "ภาษาต่างประเทศ", phone: "081-234-5674", room: "ม.5/2" },
-    { id: "tch_5", userId: "usr_tch_5", email: "prasert.s@school.ac.th", name: "อ.ประเสริฐ สุขสวัสดิ์", dept: "สังคมศึกษา ศาสนา และวัฒนธรรม", phone: "081-234-5675", room: "ม.6/1" },
+    { id: "tch_1", userId: "usr_tch_1", email: "somchai.t@wstr.ac.th", name: "อ.สมชาย ทองดี", dept: "วิทยาศาสตร์และเทคโนโลยี", phone: "081-234-5671", room: "ม.4/1" },
+    { id: "tch_2", userId: "usr_tch_2", email: "wipha.k@wstr.ac.th", name: "อ.วิภา กลิ่นสุคนธ์", dept: "ภาษาไทย", phone: "081-234-5672", room: "ม.4/2" },
+    { id: "tch_3", userId: "usr_tch_3", email: "theerapol.m@wstr.ac.th", name: "อ.ธีรพล มีชัย", dept: "คณิตศาสตร์", phone: "081-234-5673", room: "ม.5/1" },
+    { id: "tch_4", userId: "usr_tch_4", email: "orathai.p@wstr.ac.th", name: "อ.อรทัย พรมหมดี", dept: "ภาษาต่างประเทศ", phone: "081-234-5674", room: "ม.5/2" },
+    { id: "tch_5", userId: "usr_tch_5", email: "prasert.s@wstr.ac.th", name: "อ.ประเสริฐ สุขสวัสดิ์", dept: "สังคมศึกษา ศาสนา และวัฒนธรรม", phone: "081-234-5675", room: "ม.6/1" },
   ];
 
   for (const t of teachersData) {
@@ -169,35 +169,35 @@ async function seed() {
   // 3. เพิ่มนักเรียน 25 คน
   const studentNames = [
     // ม.4/1 (10 คน)
-    { code: "STU-1001", name: "น.ส.สมหญิง สดใส", email: "somying.s@school.ac.th", grade: "ม.4", room: "1", parent: "นายสุรชัย สดใส", pPhone: "089-111-2201" },
-    { code: "STU-1002", name: "นายสมศักดิ์ ภักดี", email: "somsak.p@school.ac.th", grade: "ม.4", room: "1", parent: "นางสมพร ภักดี", pPhone: "089-111-2202" },
-    { code: "STU-1003", name: "น.ส.กานดา รักษ์ดี", email: "kanda.r@school.ac.th", grade: "ม.4", room: "1", parent: "นายกมล รักษ์ดี", pPhone: "089-111-2203" },
-    { code: "STU-1004", name: "นายชานนท์ ทรงเกียรติ", email: "chanon.t@school.ac.th", grade: "ม.4", room: "1", parent: "นางชลธิชา ทรงเกียรติ", pPhone: "089-111-2204" },
-    { code: "STU-1005", name: "น.ส.ณัฐธิดา วงศ์สว่าง", email: "natthida.w@school.ac.th", grade: "ม.4", room: "1", parent: "นายณรงค์ วงศ์สว่าง", pPhone: "089-111-2205" },
-    { code: "STU-1006", name: "นายธนกฤต ประเสริฐยิ่ง", email: "thanakrit.p@school.ac.th", grade: "ม.4", room: "1", parent: "นายธนากร ประเสริฐยิ่ง", pPhone: "089-111-2206" },
-    { code: "STU-1007", name: "น.ส.ปวีณา บุญมี", email: "paweena.b@school.ac.th", grade: "ม.4", room: "1", parent: "นางปนัดดา บุญมี", pPhone: "089-111-2207" },
-    { code: "STU-1008", name: "นายพงศกร สว่างเนตร", email: "pongsakorn.s@school.ac.th", grade: "ม.4", room: "1", parent: "นายพิชัย สว่างเนตร", pPhone: "089-111-2208" },
-    { code: "STU-1009", name: "น.ส.วรัญญา แก้วมณี", email: "waranya.k@school.ac.th", grade: "ม.4", room: "1", parent: "นางวารินทร์ แก้วมณี", pPhone: "089-111-2209" },
-    { code: "STU-1010", name: "นายอัครเดช รุ่งเรือง", email: "akkaradet.r@school.ac.th", grade: "ม.4", room: "1", parent: "นายอนุสรณ์ รุ่งเรือง", pPhone: "089-111-2210" },
+    { code: "STU-1001", name: "น.ส.สมหญิง สดใส", email: "somying.s@wstr.ac.th", grade: "ม.4", room: "1", parent: "นายสุรชัย สดใส", pPhone: "089-111-2201" },
+    { code: "STU-1002", name: "นายสมศักดิ์ ภักดี", email: "somsak.p@wstr.ac.th", grade: "ม.4", room: "1", parent: "นางสมพร ภักดี", pPhone: "089-111-2202" },
+    { code: "STU-1003", name: "น.ส.กานดา รักษ์ดี", email: "kanda.r@wstr.ac.th", grade: "ม.4", room: "1", parent: "นายกมล รักษ์ดี", pPhone: "089-111-2203" },
+    { code: "STU-1004", name: "นายชานนท์ ทรงเกียรติ", email: "chanon.t@wstr.ac.th", grade: "ม.4", room: "1", parent: "นางชลธิชา ทรงเกียรติ", pPhone: "089-111-2204" },
+    { code: "STU-1005", name: "น.ส.ณัฐธิดา วงศ์สว่าง", email: "natthida.w@wstr.ac.th", grade: "ม.4", room: "1", parent: "นายณรงค์ วงศ์สว่าง", pPhone: "089-111-2205" },
+    { code: "STU-1006", name: "นายธนกฤต ประเสริฐยิ่ง", email: "thanakrit.p@wstr.ac.th", grade: "ม.4", room: "1", parent: "นายธนากร ประเสริฐยิ่ง", pPhone: "089-111-2206" },
+    { code: "STU-1007", name: "น.ส.ปวีณา บุญมี", email: "paweena.b@wstr.ac.th", grade: "ม.4", room: "1", parent: "นางปนัดดา บุญมี", pPhone: "089-111-2207" },
+    { code: "STU-1008", name: "นายพงศกร สว่างเนตร", email: "pongsakorn.s@wstr.ac.th", grade: "ม.4", room: "1", parent: "นายพิชัย สว่างเนตร", pPhone: "089-111-2208" },
+    { code: "STU-1009", name: "น.ส.วรัญญา แก้วมณี", email: "waranya.k@wstr.ac.th", grade: "ม.4", room: "1", parent: "นางวารินทร์ แก้วมณี", pPhone: "089-111-2209" },
+    { code: "STU-1010", name: "นายอัครเดช รุ่งเรือง", email: "akkaradet.r@wstr.ac.th", grade: "ม.4", room: "1", parent: "นายอนุสรณ์ รุ่งเรือง", pPhone: "089-111-2210" },
 
     // ม.4/2 (8 คน)
-    { code: "STU-1011", name: "น.ส.ชลธิชา ใจดี", email: "cholticha.j@school.ac.th", grade: "ม.4", room: "2", parent: "นายชาติชาย ใจดี", pPhone: "089-222-3301" },
-    { code: "STU-1012", name: "นายธีรวัฒน์ มุ่งมั่น", email: "theerawat.m@school.ac.th", grade: "ม.4", room: "2", parent: "นางธาริณี มุ่งมั่น", pPhone: "089-222-3302" },
-    { code: "STU-1013", name: "น.ส.พิมพ์มาดา งามยิ่ง", email: "pimmada.n@school.ac.th", grade: "ม.4", room: "2", parent: "นายพิสุทธิ์ งามยิ่ง", pPhone: "089-222-3303" },
-    { code: "STU-1014", name: "นายภานุวัฒน์ แสงสุริยา", email: "panuwat.s@school.ac.th", grade: "ม.4", room: "2", parent: "นางภาวินี แสงสุริยา", pPhone: "089-222-3304" },
-    { code: "STU-1015", name: "น.ส.รตา เลิศวิมล", email: "rata.l@school.ac.th", grade: "ม.4", room: "2", parent: "นายรัชพล เลิศวิมล", pPhone: "089-222-3305" },
-    { code: "STU-1016", name: "นายศุภกร เจริญผล", email: "supakorn.c@school.ac.th", grade: "ม.4", room: "2", parent: "นางศศิธร เจริญผล", pPhone: "089-222-3306" },
-    { code: "STU-1017", name: "น.ส.อารียา ปรีดา", email: "areeya.p@school.ac.th", grade: "ม.4", room: "2", parent: "นายอิทธิ ปรีดา", pPhone: "089-222-3307" },
-    { code: "STU-1018", name: "นายเอกภาพ ชัยชนะ", email: "ekkapap.c@school.ac.th", grade: "ม.4", room: "2", parent: "นายเอกชัย ชัยชนะ", pPhone: "089-222-3308" },
+    { code: "STU-1011", name: "น.ส.ชลธิชา ใจดี", email: "cholticha.j@wstr.ac.th", grade: "ม.4", room: "2", parent: "นายชาติชาย ใจดี", pPhone: "089-222-3301" },
+    { code: "STU-1012", name: "นายธีรวัฒน์ มุ่งมั่น", email: "theerawat.m@wstr.ac.th", grade: "ม.4", room: "2", parent: "นางธาริณี มุ่งมั่น", pPhone: "089-222-3302" },
+    { code: "STU-1013", name: "น.ส.พิมพ์มาดา งามยิ่ง", email: "pimmada.n@wstr.ac.th", grade: "ม.4", room: "2", parent: "นายพิสุทธิ์ งามยิ่ง", pPhone: "089-222-3303" },
+    { code: "STU-1014", name: "นายภานุวัฒน์ แสงสุริยา", email: "panuwat.s@wstr.ac.th", grade: "ม.4", room: "2", parent: "นางภาวินี แสงสุริยา", pPhone: "089-222-3304" },
+    { code: "STU-1015", name: "น.ส.รตา เลิศวิมล", email: "rata.l@wstr.ac.th", grade: "ม.4", room: "2", parent: "นายรัชพล เลิศวิมล", pPhone: "089-222-3305" },
+    { code: "STU-1016", name: "นายศุภกร เจริญผล", email: "supakorn.c@wstr.ac.th", grade: "ม.4", room: "2", parent: "นางศศิธร เจริญผล", pPhone: "089-222-3306" },
+    { code: "STU-1017", name: "น.ส.อารียา ปรีดา", email: "areeya.p@wstr.ac.th", grade: "ม.4", room: "2", parent: "นายอิทธิ ปรีดา", pPhone: "089-222-3307" },
+    { code: "STU-1018", name: "นายเอกภาพ ชัยชนะ", email: "ekkapap.c@wstr.ac.th", grade: "ม.4", room: "2", parent: "นายเอกชัย ชัยชนะ", pPhone: "089-222-3308" },
 
     // ม.5/1 (7 คน)
-    { code: "STU-2001", name: "น.ส.กัญญารัตน์ เพชรดี", email: "kanyarat.p@school.ac.th", grade: "ม.5", room: "1", parent: "นางกานดา เพชรดี", pPhone: "089-333-4401" },
-    { code: "STU-2002", name: "นายจิรภัทร ชาญวิทย์", email: "jiraphat.c@school.ac.th", grade: "ม.5", room: "1", parent: "นายเจริญ ชาญวิทย์", pPhone: "089-333-4402" },
-    { code: "STU-2003", name: "น.ส.ดวงกมล แสนสุข", email: "duangkamol.s@school.ac.th", grade: "ม.5", room: "1", parent: "นางดารณี แสนสุข", pPhone: "089-333-4403" },
-    { code: "STU-2004", name: "นายทินกร มั่นคง", email: "tinnakorn.m@school.ac.th", grade: "ม.5", room: "1", parent: "นายทวิช มั่นคง", pPhone: "089-333-4404" },
-    { code: "STU-2005", name: "น.ส.นภัสสร อุดมสุข", email: "napatsorn.u@school.ac.th", grade: "ม.5", room: "1", parent: "นางนภาพร อุดมสุข", pPhone: "089-333-4405" },
-    { code: "STU-2006", name: "นายปิยะวัฒน์ เจริญสุข", email: "piyawat.c@school.ac.th", grade: "ม.5", room: "1", parent: "นายปัญญา เจริญสุข", pPhone: "089-333-4406" },
-    { code: "STU-2007", name: "น.ส.มณฑิรา งามสง่า", email: "monthira.n@school.ac.th", grade: "ม.5", room: "1", parent: "นางมนตรา งามสง่า", pPhone: "089-333-4407" },
+    { code: "STU-2001", name: "น.ส.กัญญารัตน์ เพชรดี", email: "kanyarat.p@wstr.ac.th", grade: "ม.5", room: "1", parent: "นางกานดา เพชรดี", pPhone: "089-333-4401" },
+    { code: "STU-2002", name: "นายจิรภัทร ชาญวิทย์", email: "jiraphat.c@wstr.ac.th", grade: "ม.5", room: "1", parent: "นายเจริญ ชาญวิทย์", pPhone: "089-333-4402" },
+    { code: "STU-2003", name: "น.ส.ดวงกมล แสนสุข", email: "duangkamol.s@wstr.ac.th", grade: "ม.5", room: "1", parent: "นางดารณี แสนสุข", pPhone: "089-333-4403" },
+    { code: "STU-2004", name: "นายทินกร มั่นคง", email: "tinnakorn.m@wstr.ac.th", grade: "ม.5", room: "1", parent: "นายทวิช มั่นคง", pPhone: "089-333-4404" },
+    { code: "STU-2005", name: "น.ส.นภัสสร อุดมสุข", email: "napatsorn.u@wstr.ac.th", grade: "ม.5", room: "1", parent: "นางนภาพร อุดมสุข", pPhone: "089-333-4405" },
+    { code: "STU-2006", name: "นายปิยะวัฒน์ เจริญสุข", email: "piyawat.c@wstr.ac.th", grade: "ม.5", room: "1", parent: "นายปัญญา เจริญสุข", pPhone: "089-333-4406" },
+    { code: "STU-2007", name: "น.ส.มณฑิรา งามสง่า", email: "monthira.n@wstr.ac.th", grade: "ม.5", room: "1", parent: "นางมนตรา งามสง่า", pPhone: "089-333-4407" },
   ];
 
   const studentIdMap: string[] = [];
@@ -350,9 +350,9 @@ async function seed() {
   console.log("✅ Seed Data สร้างสำเร็จสมบูรณ์!");
   console.log("--------------------------------------------------");
   console.log("📌 บัญชีสำหรับทดสอบระบบ:");
-  console.log("1. Admin:   admin@school.ac.th       | รหัสผ่าน: password123");
-  console.log("2. Teacher: somchai.t@school.ac.th   | รหัสผ่าน: password123");
-  console.log("3. Student: somying.s@school.ac.th   | รหัสผ่าน: password123");
+  console.log("1. Admin:   admin@wstr.ac.th       | รหัสผ่าน: password123");
+  console.log("2. Teacher: somchai.t@wstr.ac.th   | รหัสผ่าน: password123");
+  console.log("3. Student: somying.s@wstr.ac.th   | รหัสผ่าน: password123");
   console.log("--------------------------------------------------");
 }
 

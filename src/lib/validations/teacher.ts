@@ -14,7 +14,7 @@ export const departmentOptions = [
 
 export const teacherSchema = z.object({
   fullName: z.string().min(3, "ชื่อ-นามสกุลต้องมีความยาวอย่างน้อย 3 ตัวอักษร"),
-  email: z.string().email("รูปแบบอีเมลไม่ถูกต้อง (เช่น somchai.t@school.ac.th)"),
+  email: z.string().email("รูปแบบอีเมลไม่ถูกต้อง (เช่น somchai.t@wstr.ac.th)"),
   department: z.string().min(1, "กรุณาเลือกกลุ่มสาระการเรียนรู้"),
   phone: z
     .string()

@@ -97,7 +97,7 @@ export function LoginForm() {
                   type="email"
                   autoComplete="email"
                   required
-                  placeholder="name@school.ac.th"
+                  placeholder="name@wstr.ac.th"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="pl-9"

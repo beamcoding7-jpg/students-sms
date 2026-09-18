@@ -185,7 +185,7 @@ export function StudentFormDialog({
                 name="email"
                 type="email"
                 required
-                placeholder="เช่น thotsaphon.p@school.ac.th"
+                placeholder="เช่น thotsaphon.p@wstr.ac.th"
                 value={formData.email}
                 onChange={handleChange}
               />

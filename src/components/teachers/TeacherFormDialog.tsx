@@ -151,7 +151,7 @@ export function TeacherFormDialog({
               <Input
                 id="email"
                 type="email"
-                placeholder="เช่น kittisak.j@school.ac.th"
+                placeholder="เช่น kittisak.j@wstr.ac.th"
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 required

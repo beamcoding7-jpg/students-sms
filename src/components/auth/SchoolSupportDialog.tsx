@@ -53,7 +53,7 @@ export function SchoolSupportDialog({
                 <span>สำหรับนักเรียน</span>
               </div>
               <p className="text-xs text-muted-foreground leading-relaxed">
-                ใช้อีเมลทางการของโรงเรียน (เช่น <code className="text-primary font-mono">รหัสนักเรียน@school.ac.th</code>) ในการเข้าสู่ระบบ หากเป็นการเข้าใช้งานครั้งแรกหรือลืมรหัสผ่าน สามารถติดต่ออาจารย์ที่ปรึกษาประจำชั้นหรือเจ้าหน้าที่งานทะเบียน
+                ใช้อีเมลทางการของโรงเรียน (เช่น <code className="text-primary font-mono">รหัสนักเรียน@wstr.ac.th</code>) ในการเข้าสู่ระบบ หากเป็นการเข้าใช้งานครั้งแรกหรือลืมรหัสผ่าน สามารถติดต่ออาจารย์ที่ปรึกษาประจำชั้นหรือเจ้าหน้าที่งานทะเบียน
               </p>
             </div>
 
